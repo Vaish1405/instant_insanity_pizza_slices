@@ -32,7 +32,10 @@ public class solution {
 
     // check if it's a valid slice 
     public static boolean isValid(int sliceIndex) {
-    return true; 
+        if (threadACount[sliceIndex] != 0 || threadBCount[sliceIndex + 1] != 0 || threadCCount[sliceIndex + 2] != 0) {
+            return false; 
+        }
+        return true; 
     }
 
     // checks if there is a number in the thread already
