@@ -22,7 +22,12 @@ public class solution {
     }
 
     public static void printPuzzle() {
-
+        for(int j = 1; j <= puzzle.length; j++) {
+            System.out.printf("%d ", puzzle[j-1]);
+            if (j % 3 == 0) {
+                System.out.println();
+            }
+        }
     }
 
     // check if it's a valid slice 
