@@ -38,13 +38,19 @@ public class solution {
         return true; 
     }
 
-    // checks if there is a number in the thread already
     public static void findSolution() {
-
+        
     }
 
-    public static void rotateSlices() {
+    // rotate the slices till a solution is found 
+    public static void rotateSlices(int sliceIndex) {
+        int tempCount = threadACount[sliceIndex];
+        int tempNumber = threads[sliceIndex];
 
+        threads[sliceIndex] = threads[sliceIndex + 1];
+        threadsACount[sliceIndex] = threadBCount[sliceIndex + 1];
+        threads[sliceIndex+1] = threads[sliceIndex+2];
+        threadsBCount[sliceIndex+1] = threadBCount[sliceIndex+2];
     }
 
     public static void main(String[] args) {
