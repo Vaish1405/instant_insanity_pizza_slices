@@ -11,3 +11,5 @@ The code uses Frozen-Flask application in Python to run the file in a static env
     * requests, icalendar, flask, frozen-flask
 
 - setting up the virtual env
+    - on Mac: 
+    ```source venv/bin/activate```
