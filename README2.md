@@ -15,7 +15,7 @@ The code uses Frozen-Flask application in Python to run the file in a static env
             * On Windows: ```python --versioin```
             * On Unix, Linux, macOS: ```python3 --version```
     1. Requests module
-        - In _cmd_ or _terminal_, type the following command: ```pip install requests```
+        - In _cmd_ (_command propmt_) or _terminal_, type the following command: ```pip install requests```
     1. icalendar module 
         - In _cmd_ or _terminal_, type the following command: ```pip install icalendar```
     1. flask 
@@ -32,3 +32,13 @@ The code uses Frozen-Flask application in Python to run the file in a static env
         ```venv/Scripts/activate```
     - For macOS: 
         ```source venv/bin/activate```
+
+- Running the flask application
+    - Once you are in the virtual environment, which is indicated by ```(venv)``` on your terminal or command prompt, run the following commands 
+        * ```flask EXPORT_APP=events.py```
+        * ```flask run```
+    - The application is run on the localhost. The link will be provided in the _cmd_ or _terminal_, which will look something like this. ```Running on http://127.0.0.1:5000```
+
+
+- Deactivating the virtual environment 
+    - In ``cmd`` or ``terminal`` enter ```deactivate```
