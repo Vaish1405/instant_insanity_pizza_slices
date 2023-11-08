@@ -2,9 +2,9 @@ import java.util.Arrays;
 
 public class solution {
     public static int count[] = new int[66]; // Holds the number of times a color is used in the puzzle
-    public static int puzzle[][] = new int[65][3];
+    public static int puzzle[][] = new int[65][3]; // holds the actual color numbers for the puzzle 
     public static int k = 1, output, i = 0;
-    public static int threadCounts[][] = new int[66][3];
+    public static int threadCounts[][] = new int[66][3]; // holds the number of times a color has appeared in a thread 
     public static int rotationCount[] = new int[65]; // The number of rotations to find the solution
 
     public static void generatePuzzle() {
@@ -78,36 +78,44 @@ public class solution {
                 noSolution = true;
                 break;
             }
+        // doesn't seem to be working - bogus code
+            // if (rotationCount[sliceIndex] <= 2) {
+            //     if (backtrack) {
+            //         removeSlice(sliceIndex);
+            //         rotateSlices(sliceIndex, 1);
+            //         rotationCount[sliceIndex] += 1;
+            //         if (rotationCount[sliceIndex] == 3) {
+            //             continue;
+            //         }
+            //     }
 
-            if (rotationCount[sliceIndex] <= 2) {
-                if (backtrack) {
-                    removeSlice(sliceIndex);
-                    rotateSlices(sliceIndex, 1);
-                    rotationCount[sliceIndex] += 1;
-                    if (rotationCount[sliceIndex] == 3) {
-                        continue;
-                    }
-                }
+            //     valid = isValid(sliceIndex);
 
-                valid = isValid(sliceIndex);
-
-                if (valid) {
-                    addSlice(sliceIndex);
-                    backtrack = false;
-                    sliceIndex += 1;
-                    continue;
-                } else if (!valid && backtrack) {
-                    backtrack = true;
-                } else if (!backtrack) {
-                    rotateSlices(sliceIndex, 1);
-                    rotationCount[sliceIndex] += 1;
-                    continue;
-                }
-            } else if (rotationCount[sliceIndex] == 3) {
-                rotationCount[sliceIndex] = 0;
-                backtrack = true;
-                sliceIndex -= 1;
-                continue;
+            //     if (valid) {
+            //         addSlice(sliceIndex);
+            //         backtrack = false;
+            //         sliceIndex += 1;
+            //         continue;
+            //     } else if (!valid && backtrack) {
+            //         backtrack = true;
+            //     } else if (!backtrack) {
+            //         rotateSlices(sliceIndex, 1);
+            //         rotationCount[sliceIndex] += 1;
+            //         continue;
+            //     }
+            // } else if (rotationCount[sliceIndex] == 3) {
+            //     rotationCount[sliceIndex] = 0;
+            //     backtrack = true;
+            //     sliceIndex -= 1;
+            //     continue;
+            // }
+            if isValid(sliceIndex) {
+                addSlice(sliceIndex);
+                sliceIndex++;
+            }
+            else{
+                System.out.println("This slice is not valid");
+                sliceIndex++;
             }
         }
 
@@ -116,7 +124,6 @@ public class solution {
         } else {
             return false;
         }
->>>>>>> fe929ae0c2b224ffbb340a2b91cd07b60e23e782
     }
 
     public static void main(String[] args) {
