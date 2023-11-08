@@ -1,0 +1,5 @@
+For now the solutions seems to be working. It is rotating the slices that need to be rotated to find the solution. 
+
+TODO: 
+    - the slices that need BACKTRACKING need to be taken care of...
+    - think about the algorithm and fix that 
