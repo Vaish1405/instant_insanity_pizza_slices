@@ -4,6 +4,7 @@ import java.io.*;
 public class solution {
     public static int count[] = new int[66]; // Holds the number of times a color is used in the puzzle
     public static int puzzle[][] = new int[65][3]; // holds the actual color numbers for the puzzle 
+    public static int solution[][] = new int[65][3];
     public static int k = 1, output;
     public static int threadCounts[][] = new int[66][3]; // holds the number of times a color has appeared in a thread 
     public static int rotationCount[] = new int[65]; // The number of rotations to find the solution
@@ -25,17 +26,17 @@ public class solution {
     public static void printPuzzle() {
         for(int i = 0; i < 65; i++) {
             for (int j = 0; j < 3; j++) {
-                System.out.printf("%3d ", puzzle[i][j]); 
+                System.out.printf("%3d ", solution[i][j]); 
             }
             System.out.println();
         }
     }
 
     // check if it's a valid slice 
-    public static boolean isValid(int sliceIndex) {
+    public static boolean isValid(int[] slice) {
         int color; 
         for (int i = 0; i < 3; i++) {
-            color = puzzle[sliceIndex][i];
+            color = slice[i];
             if(threadCounts[color][i] != 0) {
                 return false; 
             }
@@ -49,6 +50,7 @@ public class solution {
         for (int i = 0; i < 3; i++) {
             color = puzzle[sliceIndex][i];
             threadCounts[color][i] = 1; 
+            solution[sliceIndex][i] = color; 
         }
     }
 
@@ -126,9 +128,9 @@ public class solution {
             //     sliceIndex -= 1;
             //     continue;
             // }
-            if (isValid(sliceIndex)) {
+            if (isValid(puzzle[sliceIndex])) {
                 addSlice(sliceIndex);
-                System.out.printf("%d %d %d\n", puzzle[sliceIndex][0], puzzle[sliceIndex][1], puzzle[sliceIndex][2]);
+                System.out.printf("%d %d %d\n", solution[sliceIndex][0], solution[sliceIndex][1], solution[sliceIndex][2]);
                 sliceIndex++;
             }
             else{
@@ -136,7 +138,7 @@ public class solution {
                     System.out.printf("%d %d %d, this was rotated succesfully\n", puzzle[sliceIndex][0], puzzle[sliceIndex][1], puzzle[sliceIndex][2]);
                 }
                 else{
-                    System.out.println("Would have to backtrack");
+                    System.out.printf("%d %d %d, would have to backtrack\n", puzzle[sliceIndex][0], puzzle[sliceIndex][1], puzzle[sliceIndex][2]);
                 }
                 sliceIndex++;
             }
@@ -158,9 +160,8 @@ public class solution {
         generatePuzzle();
         
         // print the generated puzzle
-        printPuzzle();
         findSolution(); 
-        
+
 
         // // checking the threads 
         // for (int a = 0; a < 66; a++) {
