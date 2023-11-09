@@ -63,24 +63,24 @@ public class solution {
         }
     }
 
-    public static boolean rotateSlices(int sliceIndex) {
+    public static boolean rotateSlices(int[] slice) {
         int temp; 
         for (int a = 0; a < 2; a++) {
-            temp = puzzle[sliceIndex][0];
+            temp = slice[0];
 
-            threadCounts[puzzle[sliceIndex][0]][0] = 0;
-            puzzle[sliceIndex][0] = puzzle[sliceIndex][1];
+            threadCounts[slice[0]][0] = 0;
+            slice[0] = slice[1];
 
-            threadCounts[puzzle[sliceIndex][1]][1] = 0;
-            puzzle[sliceIndex][1] = puzzle[sliceIndex][2];
+            threadCounts[slice[1]][1] = 0;
+            slice[1] = slice[2];
 
-            threadCounts[puzzle[sliceIndex][2]][2] = 0;
-            puzzle[sliceIndex][2] = temp;
+            threadCounts[slice[2]][2] = 0;
+            slice[2] = temp;
 
-            if (isValid(sliceIndex)) {
-                threadCounts[puzzle[sliceIndex][0]][0] = 1; 
-                threadCounts[puzzle[sliceIndex][1]][1] = 1; 
-                threadCounts[puzzle[sliceIndex][2]][2] = 1; 
+            if (isValid(slice)) {
+                threadCounts[slice[0]][0] = 1; 
+                threadCounts[slice[1]][1] = 1; 
+                threadCounts[slice[2]][2] = 1; 
                 return true; 
             }          
         }
@@ -134,7 +134,7 @@ public class solution {
                 sliceIndex++;
             }
             else{
-                if (rotateSlices(sliceIndex)) {
+                if (rotateSlices(puzzle[sliceIndex])) {
                     System.out.printf("%d %d %d, this was rotated succesfully\n", puzzle[sliceIndex][0], puzzle[sliceIndex][1], puzzle[sliceIndex][2]);
                 }
                 else{
