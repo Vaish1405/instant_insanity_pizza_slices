@@ -10,13 +10,14 @@ import java.io.*;
 public class solution {
     public static int count[] = new int[66]; // Holds the number of times a color is used in the puzzle
     public static int puzzle[][] = new int[65][3]; // holds the actual color numbers for the puzzle 
-    public static int k = 1;
+    public static int k = 1, backtrackIndex = 0;
     public static int threadCounts[][] = new int[66][3]; // holds the number of times a color has appeared in a thread 
     public static int rotationCount[] = new int[66]; 
 
     public static int solution[][] = new int[65][3];
+    public static int backtrack[][] = new int[10][3];
     public static int pizzaIndex = 0, solIndex = 0; 
-    public static int valid[] = new int[65];
+    public static int valid[] = new int[65]; // storing the slices that were already added into the solution array
 
     // generates the initial puzzle. No color should show up more than 3 times in the puzzle.
     public static void generatePuzzle() {
@@ -78,7 +79,7 @@ public class solution {
 
     public static boolean rotateSlices(int sliceIndex) {
         int temp; 
-        for (int a = rotationCount[sliceIndex]; a <= 2; a++) {
+        for (int a = rotationCount[sliceIndex]; a < 2; a++) {
             temp = puzzle[sliceIndex][0];
 
             threadCounts[puzzle[sliceIndex][0]][0] = 0;
@@ -100,58 +101,45 @@ public class solution {
         return false; 
     }    
 
-    public static boolean rotateSlices(int[] slice) {
-        int temp = slice[0];
-        threadCounts[slice[0]][0] = 0; 
-        slice[0] = slice[1];
-        threadCounts[slice[1]][1] = 0; 
-        slice[1] = slice[2];
-        threadCounts[slice[2]][2] = 0; 
-        slice[2] = temp; 
-        if (isValid(slice)) {
-            threadCounts[slice[0]][0] = 1; 
-            threadCounts[slice[1]][1] = 1; 
-            threadCounts[slice[2]][2] = 1; 
-            return true; 
-        }   
-        return true; 
-    }
-
     // backtracking to the last index where the color was seen to rotate and see if it's valid 
     public static void backtrack(int sliceIndex, int solIndex) {
-        List<Integer> curSlice; 
-        for (int i = solIndex - 1; i >= 0; i--) {
-            // if (solution[sliceIndex] == solution[i]) {
-            //     System.out.print("Equal");
-            // }
-            // if (rotationCount[i] < 2) {
+        // List<Integer> curSlice; 
+        // for (int i = solIndex - 1; i >= 0; i--) {
+        //     // if (solution[sliceIndex] == solution[i]) {
+        //     //     System.out.print("Equal");
+        //     // }
+        //     // if (rotationCount[i] < 2) {
 
-            // }
-            // System.out.printf("Find: %3d %3d %3d\n", puzzle[sliceIndex][0], puzzle[sliceIndex][1], puzzle[sliceIndex][2]); -> testing the given index
-            curSlice = Arrays.asList(solution[i][0], solution[i][1], solution[i][2]);
-            // int[] slice = {solution[i][0], solution[i][1], solution[i][2]};
-            if (isValid(new int[]{puzzle[sliceIndex][0], puzzle[sliceIndex][1], puzzle[sliceIndex][2]})) {
-                return;
-            }
-            // System.out.printf("%3d %3d %3d\n", solution[i][0], solution[i][1], solution[i][2]); -> testing the given index 
-            if (curSlice.contains(puzzle[sliceIndex][0]) || curSlice.contains(puzzle[sliceIndex][1]) || curSlice.contains(puzzle[sliceIndex][2])) {
-                if (rotateSlices(solution[i])) { // rotation of the previous slices doesn't cause problem to the solution
-                    // System.out.print("this was rotated \n");
-                    rotationCount[sliceIndex]++;
-                }
-                // if rotating is not possible.. i.e. rotating the slice disturbs other slices
-                else {
-                    System.out.println("Need to work");
-                }
-            }
-        }
+        //     // }
+        //     // System.out.printf("Find: %3d %3d %3d\n", puzzle[sliceIndex][0], puzzle[sliceIndex][1], puzzle[sliceIndex][2]); -> testing the given index
+        //     curSlice = Arrays.asList(solution[i][0], solution[i][1], solution[i][2]);
+        //     // int[] slice = {solution[i][0], solution[i][1], solution[i][2]};
+        //     if (isValid(new int[]{puzzle[sliceIndex][0], puzzle[sliceIndex][1], puzzle[sliceIndex][2]})) {
+        //         return;
+        //     }
+        //     // System.out.printf("%3d %3d %3d\n", solution[i][0], solution[i][1], solution[i][2]); -> testing the given index 
+        //     if (curSlice.contains(puzzle[sliceIndex][0]) || curSlice.contains(puzzle[sliceIndex][1]) || curSlice.contains(puzzle[sliceIndex][2])) {
+        //         if (rotateSlices(solution[i])) { // rotation of the previous slices doesn't cause problem to the solution
+        //             // System.out.print("this was rotated \n");
+        //             rotationCount[sliceIndex]++;
+        //         }
+        //         // if rotating is not possible.. i.e. rotating the slice disturbs other slices
+        //         else {
+        //             System.out.println("Need to work");
+        //         }
+        //     }
+        // }
     }
 
+    public static void addSliceBacktrack(int backtrackIndex, int index) {
+        for (int i = 0; i < 3; i++) {
+            backtrack[backtrackIndex][i] = puzzle[index][i];
+        }
+    }
     // this method is used to minimize the backtracking 
     // It puts all the slices that are right without any rotation or anything first in the solution array 
     // Once everything that doesn't need to be rotated is done, we can look at the other slices and rotate and backtrack those 
     public static void findSolution() {
-        boolean check = false; 
         while(pizzaIndex < 65) {
             if((threadCounts[puzzle[pizzaIndex][0]][0] == 0) && (threadCounts[puzzle[pizzaIndex][1]][1] == 0) && threadCounts[puzzle[pizzaIndex][2]][2] == 0) {
                 addSlice(pizzaIndex, solIndex);
@@ -163,7 +151,6 @@ public class solution {
         }
         pizzaIndex = solIndex; // writing till where the back tracking or rotating is not done
         for (int index = 0; index < 65; index++) {
-            check = false; 
             if(valid[index] == 0) {
                 boolean a = rotateSlices(index);
                 if(a) {
@@ -172,26 +159,41 @@ public class solution {
                     solIndex++;
                 }
                 else {
-                    while (!check) {
-                        backtrack(index, solIndex);
-                        System.out.printf("%3d\n", puzzle[index][0]);
-                        if(isValid(puzzle[index])) {
-                            check = true; 
-                        }
-                        index--;
-                    }
-                    
+                    // while (!check) {
+                    //     backtrack(index, solIndex);
+                    //     check = true; 
+                    // }
+                    System.out.println("backtracking");
+                    addSliceBacktrack(backtrackIndex, index);
+                    backtrackIndex++;
                     // System.out.printf("%3d %3d %3d backtracked\n", puzzle[index][0], puzzle[index][1], puzzle[index][2]);
                 }
             }
         }
     }
+
+    public static void printBacktrack() {
+        int i = 0, j = 0;
+        while (backtrack[i][j] != 0) {
+            System.out.printf("%3d ", backtrack[i][j]);
+            j++;
+            if (j % 3 == 0) {
+                i++;
+                j =0;
+                System.out.println(); 
+            } 
+        }
+    }
+
     public static void main(String[] args) {
         generatePuzzle();
         // printPuzzle();
         
         // print the generated puzzle
         findSolution(); 
+
+        System.out.println("backtrack array");
+        printBacktrack(); 
 
         // printPuzzle();
         // for(int i = 0; i < 66; i++) {
