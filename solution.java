@@ -173,7 +173,10 @@ public class solution {
             }
         }
 
-        backtrack(solIndex);
+        while (solIndex < 65) {
+            System.out.println("Slice index: " + solIndex);
+            backtrack(solIndex);
+        }
     }
 
     public static void printBacktrack() {
@@ -196,6 +199,7 @@ public class solution {
         long startTime = System.nanoTime();
 
         generatePuzzle();
+        // printPuzzle();
         
         // print the generated puzzle
         findSolution(); 
