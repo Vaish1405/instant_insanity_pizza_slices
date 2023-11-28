@@ -173,10 +173,10 @@ public class solution {
             }
         }
 
-        while (solIndex < 65) {
-            System.out.println("Slice index: " + solIndex);
-            backtrack(solIndex);
-        }
+        // while (solIndex < 65) {
+        //     System.out.println("Slice index: " + solIndex);
+        //     backtrack(solIndex);
+        // }
     }
 
     public static void printBacktrack() {
@@ -199,7 +199,7 @@ public class solution {
         long startTime = System.nanoTime();
 
         generatePuzzle();
-        // printPuzzle();
+        printPuzzle();
         
         // print the generated puzzle
         findSolution(); 
@@ -211,14 +211,14 @@ public class solution {
 
         System.out.printf("%d nanoseconds\n", elapsedTime);
 
-        // System.out.println("backtrack array");
-        // printBacktrack(); 
+        System.out.println("backtrack array");
+        printBacktrack(); 
 
-        // printPuzzle();
+        printPuzzle();
 
-        // printPuzzle();
-        // for(int i = 0; i < 66; i++) {
-        //     System.out.printf("%d ", rotationCount[i]);
-        // }
+        printPuzzle();
+        for(int i = 0; i < 66; i++) {
+            System.out.printf("%d ", rotationCount[i]);
+        }
     }
 }
