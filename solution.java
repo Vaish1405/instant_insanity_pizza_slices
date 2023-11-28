@@ -173,10 +173,10 @@ public class solution {
             }
         }
 
-        while (solIndex < 65) {
-            System.out.println("Slice index: " + solIndex);
-            backtrack(solIndex);
-        }
+        // while (solIndex < 65) {
+        //     System.out.println("Slice index: " + solIndex);
+        //     backtrack(solIndex);
+        // }
     }
 
     public static void printBacktrack() {
