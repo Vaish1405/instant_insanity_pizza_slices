@@ -132,7 +132,6 @@ import java.util.*;
 
 public class andresolution {
 
-    private static int k = 0;
     private static int[] count = new int[66]; // 0 to 65
 
     public static void main(String[] args) {
@@ -215,19 +214,20 @@ public class andresolution {
 
     static List<Cube> generateRandomPuzzle(int numCubes, int numSides, int numColors) {
         List<Cube> puzzle = new ArrayList<>();
-        k = 1;
+        Random random = new Random();
+
         Arrays.fill(count, 0);
 
         for (int i = 0; i < numCubes; i++) {
             int[] cubeColors = new int[numSides];
-            for (int j = 0; j < numSides; ) {
-                int output = 1 + (int) (Math.floor(17 * Math.E * k) % 65);
+            int j = 0;
+            while (j < numSides) {
+                int output = 1 + random.nextInt(numColors);
                 if (count[output] < 3) {
                     cubeColors[j] = output;
                     count[output]++;
                     j++;
                 }
-                k++;
             }
             puzzle.add(new Cube(cubeColors));
         }

@@ -41,7 +41,7 @@ public class solution {
     public static void printPuzzle() {
         for(int i = 0; i < 65; i++) {
             for (int j = 0; j < 3; j++) {
-                System.out.printf("%3d ", solution[i][j]); 
+                System.out.printf("%3d ", puzzle[i][j]); 
             }
             System.out.println();
         }
@@ -79,58 +79,64 @@ public class solution {
     }
 
     public static boolean rotateSlices(int sliceIndex) {
-        int temp; 
+        // if (isValid(solution[sliceIndex])) {return true;}
+        int temp[] = new int[3], x1 = 1, x2 = 2, x3 = 0; 
         for (int a = rotationCount[sliceIndex]; a < 2; a++) {
-            temp = puzzle[sliceIndex][0];
+            temp[0] = puzzle[sliceIndex][x1];
+            temp[1] = puzzle[sliceIndex][x2];
+            temp[2] = puzzle[sliceIndex][x3];
+            // System.out.printf("%3d %3d %3d\n", temp[0], temp[1], temp[2]);
+            x1 = 2; x2 = 0; x3 = 1; 
+            // temp = puzzle[sliceIndex][0];
 
-            threadCounts[puzzle[sliceIndex][0]][0] = 0;
-            puzzle[sliceIndex][0] = puzzle[sliceIndex][1];
+            // threadCounts[puzzle[sliceIndex][0]][0] = 0;
+            // puzzle[sliceIndex][0] = puzzle[sliceIndex][1];
 
-            threadCounts[puzzle[sliceIndex][1]][1] = 0;
-            puzzle[sliceIndex][1] = puzzle[sliceIndex][2];
+            // threadCounts[puzzle[sliceIndex][1]][1] = 0;
+            // puzzle[sliceIndex][1] = puzzle[sliceIndex][2];
 
-            threadCounts[puzzle[sliceIndex][2]][2] = 0;
-            puzzle[sliceIndex][2] = temp;
-            rotationCount[sliceIndex] = a+1; 
-            if (isValid(puzzle[sliceIndex])) {
+            // threadCounts[puzzle[sliceIndex][2]][2] = 0;
+            // puzzle[sliceIndex][2] = temp;
+            // rotationCount[sliceIndex] = a+1; 
+            if (isValid(temp)) {
+                rotationCount[sliceIndex]++;
                 threadCounts[puzzle[sliceIndex][0]][0] = 1; 
                 threadCounts[puzzle[sliceIndex][1]][1] = 1; 
-                threadCounts[puzzle[sliceIndex][2]][2] = 1; 
+                threadCounts[puzzle[sliceIndex][2]][2] = 1;
+                puzzle[sliceIndex][0] = temp[0];
+                puzzle[sliceIndex][1] = temp[1];
+                puzzle[sliceIndex][2] = temp[2];
                 return true; 
             }          
         }
         return false; 
     }    
 
-    public static void backtrack(int index) {
-        index--; // Move back to the previous slice
-    
-        // If we have backtracked beyond the initial puzzle, return
-        if (index < 0) {
-            return;
-        }
-    
-        // Remove the current slice from the solution
-        removeSlice(index);
-    
-        // Reset the rotation count for the current slice
-        rotationCount[index] = 0;
-    
-        // Mark the current slice as not valid (not added to the solution)
-        valid[index] = 0;
-    
-        // Try the next rotation for the previous slice
-        if (rotateSlices(index - 1)) {
-            addSlice(index - 1, solIndex);
-            // solIndex++;
-    
-            // Move to the next slice in the puzzle
-            pizzaIndex = index;
-            // findSolution(); // Continue finding the solution from the current point
-        } else {
-            // If rotation is not possible for the previous slice, backtrack further
-            backtrack(index);
-        }
+    public static int backtrack(int index) {
+        int backtrack = 0; 
+ // checking conditions for the previous slices 
+        while (index > 0) {
+            index--;
+            // if (backtrack) {
+                System.out.println(rotationCount[index]);
+                if (rotationCount[index] < 2) {
+                    if(rotateSlices(solIndex)) {
+                        // rotationCount[index] += 1;
+                        return backtrack;
+                    }
+                }
+                if (rotationCount[index] == 2) {
+                    removeSlice(solIndex);  
+                    rotationCount[index] = 0;
+                    backtrack--;
+                }
+                backtrack++;
+                solIndex--;
+
+            // }
+
+        } 
+        return backtrack;
     }    
 
     public static void addSliceBacktrack(int backtrackIndex, int index) {
@@ -145,7 +151,7 @@ public class solution {
         while(pizzaIndex < 65) {
             if((threadCounts[puzzle[pizzaIndex][0]][0] == 0) && (threadCounts[puzzle[pizzaIndex][1]][1] == 0) && threadCounts[puzzle[pizzaIndex][2]][2] == 0) {
                 addSlice(pizzaIndex, solIndex);
-                // System.out.printf("%3d %3d %3d, rotation: %d\n", puzzle[pizzaIndex][0], puzzle[pizzaIndex][1], puzzle[pizzaIndex][2], rotationCount[pizzaIndex]);
+                System.out.printf("%3d %3d %3d, rotation: %d\n", puzzle[pizzaIndex][0], puzzle[pizzaIndex][1], puzzle[pizzaIndex][2], rotationCount[pizzaIndex]);
                 solIndex++;
                 valid[pizzaIndex] = 1; 
             }
@@ -157,7 +163,7 @@ public class solution {
                 boolean a = rotateSlices(index);
                 if(a) {
                     addSlice(index, solIndex);
-                    // System.out.printf("%3d %3d %3d, rotation: %d\n", puzzle[index][0], puzzle[index][1], puzzle[index][2], rotationCount[index]);
+                    System.out.printf("%3d %3d %3d, rotation: %d\n", puzzle[index][0], puzzle[index][1], puzzle[index][2], rotationCount[index]);
                     solIndex++;
                 }
                 else {
@@ -166,17 +172,20 @@ public class solution {
                     //     check = true; 
                     // }
                     // System.out.println("backtracking");
-                    addSliceBacktrack(backtrackIndex, index);
-                    backtrackIndex++;
+                    // addSliceBacktrack(backtrackIndex, index);
+                    // backtrackIndex++;
+                    
+                    int temp = backtrack(index);
+                    index = index - temp - 1;
                     // System.out.printf("%3d %3d %3d backtracked\n", puzzle[index][0], puzzle[index][1], puzzle[index][2]);
                 }
             }
         }
 
-        // while (solIndex < 65) {
-        //     System.out.println("Slice index: " + solIndex);
-        //     backtrack(solIndex);
-        // }
+        while (solIndex < 65) {
+            System.out.println("Slice index: " + solIndex);
+            backtrack(solIndex);
+        }
     }
 
     public static void printBacktrack() {
@@ -194,12 +203,9 @@ public class solution {
 
     public static void main(String[] args) {
 
-
-
         long startTime = System.nanoTime();
 
         generatePuzzle();
-        printPuzzle();
         
         // print the generated puzzle
         findSolution(); 
@@ -210,15 +216,9 @@ public class solution {
         long elapsedTime = endTime - startTime;
 
         System.out.printf("%d nanoseconds\n", elapsedTime);
+        // printPuzzle();
 
-        System.out.println("backtrack array");
-        printBacktrack(); 
-
-        printPuzzle();
-
-        printPuzzle();
-        for(int i = 0; i < 66; i++) {
-            System.out.printf("%d ", rotationCount[i]);
-        }
+        // System.out.println("backtrack array");
+        // printBacktrack(); 
     }
 }
